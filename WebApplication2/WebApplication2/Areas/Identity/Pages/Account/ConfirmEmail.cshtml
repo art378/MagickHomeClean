@@ -1,0 +1,13 @@
+﻿@page
+@model WebApplication2.Areas.Identity.Pages.Account.ConfirmEmailModel
+@{
+    ViewData["Title"] = "Підтвердження пошти";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="alert alert-info" role="alert">
+    @Model.StatusMessage
+</div>
+
+<a asp-page="/Index">Повернутися на головну</a>

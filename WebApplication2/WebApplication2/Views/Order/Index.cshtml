@@ -1,0 +1,152 @@
+﻿@model List<WebApplication2.Models.Order>
+
+<h2>Список замовлень</h2>
+
+@foreach (var order in Model)
+{
+    <div class="card position-relative mb-3 p-3">
+        <strong>Замовлення № @order.Id</strong><br />
+        Ім’я: @order.FullName <br />
+        Номер телефону: @order.PhoneNumber <br />
+        Адреса: @order.Address <br />
+        Дата: @order.CreatedAt.ToShortDateString() <br />
+        <ul>
+            @foreach (var item in order.Items)
+            {
+                <li>@item.ProductName — @item.Quantity шт. × @item.Price грн</li>
+            }
+        </ul>
+        <strong>Сума: @(order.Items.Sum(i => i.Price * i.Quantity)) грн</strong>
+
+        <!-- Статус у правому нижньому куті -->
+        <span id="order-status-@order.Id"
+              class="badge text-bg-primary position-absolute bottom-0 end-0 m-3">
+            @order.Status
+        </span>
+
+        <!-- ОНОВИТИ СТАТУС -->
+        <div class=" mb-2">
+        <form asp-action="UpdateStatus" method="post" class="d-inline me-2" onsubmit="event.preventDefault(); updateStatus(this);">
+            <input type="hidden" name="id" value="@order.Id" />
+            <select name="status" class="form-select form-select-sm d-inline w-auto">
+                @foreach (var status in Enum.GetValues(typeof(WebApplication2.Models.OrderStatus)))
+                {
+                    <option value="@status" selected="@(order.Status == (WebApplication2.Models.OrderStatus)status)">
+                        @status
+                    </option>
+                }
+            </select>
+            <button type="submit" class="btn btn-sm btn-primary">Оновити статус</button>
+        </form>
+        </div>
+
+        <!-- ВИДАЛИТИ -->
+        <div class=" mb-2">
+        <form asp-action="Delete" asp-controller="Order" asp-route-id="@order.Id" method="post" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-danger">Видалити</button>
+        </form>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function showStatusToast(status) {
+            console.log("Отриманий статус:", status);
+
+            const toastEl = document.getElementById('statusToast');
+            const toastMessage = document.getElementById('toastMessage');
+
+            // Очищення попередніх класів
+            toastEl.classList.remove('text-bg-primary', 'text-bg-success', 'text-bg-warning', 'text-bg-light');
+
+            const st = status.toLowerCase();
+
+            switch (st) {
+                case 'new':
+                    toastMessage.textContent = 'Статус: Нове';
+                    toastEl.classList.add('text-bg-light');
+                    break;
+                case 'processing':
+                    toastMessage.textContent = 'Статус: Опрацьовується';
+                    toastEl.classList.add('text-bg-warning');
+                    break;
+                case 'completed':
+                    toastMessage.textContent = 'Статус: Виконане';
+                    toastEl.classList.add('text-bg-success');
+                    break;
+                default:
+                    toastMessage.textContent = 'Статус оновлено';
+                    toastEl.classList.add('text-bg-primary');
+            }
+
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+    </script>
+    <script>
+        function updateStatus(form) {
+            const formData = new FormData(form);
+            const status = formData.get("status");
+            const orderId = formData.get("id");
+
+            fetch('/Order/UpdateStatus', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => {
+                if (res.ok) {
+                    const statusEl = document.getElementById('order-status-' + orderId);
+                    if (statusEl) {
+                        statusEl.textContent = status;
+
+                        // Очищаємо класи кольору
+                        statusEl.classList.remove('bg-secondary', 'bg-success', 'bg-warning', 'bg-light', 'bg-primary');
+
+                        switch(status.toLowerCase()) {
+                            case 'completed':
+                                statusEl.classList.add('bg-success');
+                                break;
+                            case 'processing':
+                                statusEl.classList.add('bg-warning');
+                                break;
+                            case 'new':
+                                statusEl.classList.add('bg');
+                                break;
+                            default:
+                                statusEl.classList.add('bg-secondary');
+                        }
+                    }
+                    showStatusToast(status);
+                } else {
+                    alert("Помилка при оновленні статусу");
+                }
+            });
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll("[id^='order-status-']").forEach(function (el) {
+                const status = el.textContent.trim().toLowerCase();
+
+                // Очищаємо попередні кольори
+                el.classList.remove('bg-secondary', 'bg-success', 'bg-warning', 'bg-light', 'bg-primary');
+
+                switch (status) {
+                    case 'completed':
+                        el.classList.add('bg-success');
+                        break;
+                    case 'processing':
+                        el.classList.add('bg-warning');
+                        break;
+                    case 'new':
+                        el.classList.add('bg-light');
+                        break;
+                    default:
+                        el.classList.add('bg-secondary');
+                }
+            });
+        });
+    </script>
+
+}

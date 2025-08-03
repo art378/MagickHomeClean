@@ -1,0 +1,84 @@
+﻿@model WebApplication2.Models.Product
+
+@{
+    ViewData["Title"] = "Додати товар";
+    var selectedSubIds = ViewBag.SelectedSubcategoryIds as List<int> ?? new List<int>();
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<!-- 👇 Додано enctype -->
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <!-- 🔽 Варіант 1: посилання -->
+    <div class="mb-3">
+        <label asp-for="ImageUrl" class="form-label">Посилання на зображення (опціонально)</label>
+        <input asp-for="ImageUrl" class="form-control" />
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <!-- 🔽 Варіант 2: завантаження файлу -->
+    <div class="mb-3">
+        <label for="ImageFile" class="form-label">Завантажити зображення з ПК</label>
+        <input type="file" name="ImageFile" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CategoryId" class="form-label">Категорія</label>
+        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control">
+            <option value="">-- оберіть категорію --</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Підкатегорії</label>
+        @{
+            var subcategories = ViewBag.AllSubcategories as List<WebApplication2.Models.Subcategory>;
+        }
+
+        @if (subcategories != null)
+        {
+            foreach (var sub in subcategories)
+            {
+                <div class="form-check">
+                    <input type="checkbox"
+                           name="SelectedSubcategoryIds"
+                           value="@sub.Id"
+                           class="form-check-input"
+                           @(selectedSubIds.Contains(sub.Id) ? "checked" : "") />
+                    <label class="form-check-label">@sub.Name</label>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-warning">Підкатегорії не завантажені.</p>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-primary">Зберегти</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Назад до списку</a>
+    <a asp-action="Database" class="btn btn-primary">База даних</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
