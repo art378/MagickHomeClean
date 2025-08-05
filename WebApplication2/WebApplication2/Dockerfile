@@ -10,9 +10,8 @@ COPY . .
 RUN ls -R
 
 # Після перегляду виводу — відкоригуй шлях нижче
-RUN dotnet restore "WebApplication2/WebApplication2.csproj"
-
-RUN dotnet publish "WebApplication2/WebApplication2.csproj" -c Release -o /app/publish
+RUN dotnet restore "WebApplication2.csproj"
+RUN dotnet publish "WebApplication2.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
