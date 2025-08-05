@@ -1,25 +1,21 @@
-# Базовий образ для рантайму ASP.NET
+# Базовий образ для ASP.NET
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-# Образ для побудови проєкту
+# SDK для збірки
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Копіюємо все в контейнер
 COPY . .
 
-# Вказуємо правильний шлях до csproj
+# Виконуємо restore і publish для існуючого проєкту
 RUN dotnet restore "WebApplication2/WebApplication2.csproj"
-
-# Публікуємо в релізі
 RUN dotnet publish "WebApplication2/WebApplication2.csproj" -c Release -o /app/publish
 
-# Формуємо фінальний образ
+# Фінальний контейнер
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-
-# Запускаємо застосунок
 ENTRYPOINT ["dotnet", "WebApplication2.dll"]
