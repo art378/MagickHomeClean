@@ -1,24 +1,27 @@
+# Етап 1: базовий runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 
+# Етап 2: build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Копіюємо весь вміст (включно з вкладеною WebApplication2/)
+# Копіюємо всі файли у контейнер
 COPY . .
 
-# Restore (вказуємо правильний шлях до csproj)
-RUN dotnet restore "WebApplication2/WebApplication2/WebApplication2.csproj"
+# Відновлюємо залежності
+RUN dotnet restore "WebApplication2.csproj"
 
-# Publish
-RUN dotnet publish "WebApplication2/WebApplication2/WebApplication2.csproj" -c Release -o /app/publish
+# Публікуємо застосунок
+RUN dotnet publish "WebApplication2.csproj" -c Release -o /app/publish
 
+# Етап 3: фінальний образ
 FROM base AS final
 WORKDIR /app
 
-# Копіюємо з build stage опубліковану папку
+# Копіюємо результати публікації
 COPY --from=build /app/publish .
 
-# Запуск DLL
+# Запускаємо застосунок
 ENTRYPOINT ["dotnet", "WebApplication2.dll"]
