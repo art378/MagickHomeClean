@@ -21,8 +21,11 @@ namespace WebApplication2.Models
 
         [Required(ErrorMessage = "Оберіть категорію")]
         public int CategoryId { get; set; }
+<<<<<<< HEAD
         public string? SizesWithPrices { get; set; }
         
+=======
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
 
         // Навігаційна властивість до основної категорії
         public Category? Category { get; set; }

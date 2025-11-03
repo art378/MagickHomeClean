@@ -33,9 +33,13 @@
 
         // Додати товар до кошика
         [HttpPost]
+<<<<<<< HEAD
         [ValidateAntiForgeryToken]
         [HttpPost]
         public JsonResult AddToCart(int id, string SelectedSize, decimal SelectedPrice)
+=======
+        public JsonResult AddToCart(int id)
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
         {
             var product = _context.Products
                 .Include(p => p.Discounts)
@@ -60,12 +64,19 @@
                 {
                     ProductId = product.Id,
                     ProductName = product.Name,
+<<<<<<< HEAD
                     DiscountPercent = activeDiscount?.Percent, // може бути null
                     Quantity = 1,
                     ImageUrl = product.ImageUrl,
                     Size = SelectedSize,
                     SizePrice = SelectedPrice, // ← так!
                     OriginalPrice = product.Price, // для історії/знижки
+=======
+                    OriginalPrice = product.Price, // ✅ правильне поле
+                    DiscountPercent = activeDiscount?.Percent, // може бути null
+                    Quantity = 1,
+                    ImageUrl = product.ImageUrl
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
                 });
             }
 
@@ -117,4 +128,8 @@
             return RedirectToAction("Index");
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e

@@ -39,7 +39,11 @@
             var newOrder = new Order
             {
                 FullName = order.FullName,
+<<<<<<< HEAD
                 PhoneNumber = order.PhoneNumber, 
+=======
+                PhoneNumber = order.PhoneNumber, // Заміна Email на PhoneNumber
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
                 Address = order.Address,
                 CreatedAt = DateTime.Now,
                 Items = cart.Select(item => new OrderItem
@@ -47,8 +51,12 @@
                     ProductId = item.ProductId,
                     ProductName = item.ProductName,
                     Price = item.Price,
+<<<<<<< HEAD
                     Quantity = item.Quantity,
                     Size = item.Size
+=======
+                    Quantity = item.Quantity
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
                 }).ToList()
             };
             _context.Orders.Add(newOrder);

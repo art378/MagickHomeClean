@@ -1,5 +1,6 @@
 {
     "profiles": {
+<<<<<<< HEAD
       "WebApplication2": {
         "commandName": "Project",
         "launchBrowser": true,
@@ -9,6 +10,17 @@
         },
         "dotnetRunMessages": true
       },
+=======
+        "WebApplication2": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "applicationUrl": "https://localhost:5075;http://localhost:5074",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "dotnetRunMessages": true
+        },
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
         "IIS Express": {
             "commandName": "IISExpress",
             "launchBrowser": true,

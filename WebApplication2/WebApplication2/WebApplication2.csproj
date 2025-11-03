@@ -19,4 +19,8 @@
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
 	</ItemGroup>
 
+<<<<<<< HEAD
 </Project>
+=======
+</Project>
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e

@@ -45,7 +45,11 @@
                 }
                 else
                 {
+<<<<<<< HEAD
                     <h2 id="product-price" class="fw-semibold text-warm-gold" style="font-size: 2.2rem;">
+=======
+                    <h2 class="fw-semibold text-warm-gold" style="font-size: 2.2rem;">
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
                         @Model.Price.ToString("0.00") <small class="fs-5">₴</small>
                     </h2>
                 }
@@ -63,6 +67,7 @@
             <div class="mb-4 text-dark" style="white-space: pre-line;">
                 @Model.Description
             </div>
+<<<<<<< HEAD
             @{
                 var sizePricePairs = Model.SizesWithPrices?
                 .Split(',')
@@ -87,19 +92,28 @@
                 </div>
             }
 
+=======
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
 
             <form asp-controller="Cart" asp-action="AddToCart" method="post" class="w-100 align-self-start mt-3" id="addToCartForm">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="id" value="@Model.Id" />
+<<<<<<< HEAD
                 <input type="hidden" name="SelectedSize" id="selectedSizeHidden" />
                 <input type="hidden" name="SelectedPrice" id="selectedPriceHidden" />  
                 <button id="btnAddToCart" type="submit" class="btn btn-warning btn-lg w-100 shadow-sm"
                         style="font-family: 'Poppins', sans-serif;'"
+=======
+                <button id="btnAddToCart" type="submit" class="btn btn-warning btn-lg w-100 shadow-sm" style="font-family: 'Poppins', sans-serif;'"
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
                         @(Model.IsAvailable ? "" : "disabled=\"disabled\"")>
                     <i class="bi bi-cart-plus me-2"></i> Додати до кошика
                 </button>
             </form>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
         </div>
     </div>
 </div>
@@ -187,6 +201,7 @@
                         }
                     });
             });
+<<<<<<< HEAD
                 // --- Додаємо поведінку для вибору розміру ---
                 const sizeRadios = document.querySelectorAll('input[name="SelectedSize"]');
         const selectedSizeHidden = document.getElementById('selectedSizeHidden');
@@ -217,6 +232,8 @@
                 }
             });
         });
+=======
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
         });
     </script>
 }

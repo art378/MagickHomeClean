@@ -28,6 +28,7 @@
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
+<<<<<<< HEAD
     <div class="mb-3">
         <label for="SizesWithPrices" class="form-label">
             Розміри і ціни (формат: 140x205=350,155x210=399)
@@ -35,6 +36,8 @@
         <input type="text" name="SizesWithPrices" class="form-control" value="@Model.SizesWithPrices" />
         <span class="text-muted">Розмір=Ціна, через кому для багатьох варіантів</span>
     </div>
+=======
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
 
     <div class="form-group">
         <label asp-for="ImageUrl"></label>
@@ -44,11 +47,18 @@
 
     <div class="form-group">
         <label asp-for="CategoryId"></label>
+<<<<<<< HEAD
         <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"></select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
 
 
+=======
+        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
     <div class="form-group mt-3">
         <input type="submit" value="Зберегти" class="btn btn-success" />
         <a asp-action="Database" class="btn btn-secondary">Назад</a>

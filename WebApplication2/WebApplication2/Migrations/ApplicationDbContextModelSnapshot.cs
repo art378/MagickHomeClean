@@ -338,9 +338,12 @@ namespace WebApplication2.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+<<<<<<< HEAD
                     b.Property<string>("Size")
                         .HasColumnType("nvarchar(max)");
 
+=======
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
@@ -379,9 +382,12 @@ namespace WebApplication2.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+<<<<<<< HEAD
                     b.Property<string>("SizesWithPrices")
                         .HasColumnType("nvarchar(max)");
 
+=======
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");

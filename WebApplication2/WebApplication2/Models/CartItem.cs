@@ -4,10 +4,13 @@
     {
         public int ProductId { get; set; }
         public string ProductName { get; set; } = string.Empty;
+<<<<<<< HEAD
         public string? Size { get; set; }
         public decimal SizePrice { get; set; } // ← окрема ціна для розміру (приймати з форми)
 
 
+=======
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
 
         // Базова ціна товару без знижки
         public decimal OriginalPrice { get; set; }
@@ -16,6 +19,7 @@
         public decimal? DiscountPercent { get; set; }
 
         // Розрахунок фактичної ціни з урахуванням знижки
+<<<<<<< HEAD
         public decimal Price
         {
             get
@@ -26,6 +30,11 @@
                 return OriginalPrice;
             }
         }
+=======
+        public decimal Price => HasDiscount
+            ? Math.Round(OriginalPrice * (1 - DiscountPercent.Value / 100), 2)
+            : OriginalPrice;
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
 
         // Кількість товару в кошику
         public int Quantity { get; set; }

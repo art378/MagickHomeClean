@@ -32,9 +32,14 @@ namespace WebApplication2.Data
                 new Subcategory { Name = "Скатертини" },
                 new Subcategory { Name = "Сервірування" },
                 new Subcategory { Name = "Глиняний посуд" },
+<<<<<<< HEAD
                 new Subcategory { Name = "Скляний та порцеляновий посуд" },
                 new Subcategory { Name = "Пасхальний декор" },
                 new Subcategory { Name = "Картини з бурштину" },
+=======
+                new Subcategory { Name = "Скляний посуд" },
+                new Subcategory { Name = "Пасхальний декор" },
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
                 new Subcategory { Name = "Новорічний декор" },
                 new Subcategory { Name = "Підсвічники" },
                 new Subcategory { Name = "Вази" },

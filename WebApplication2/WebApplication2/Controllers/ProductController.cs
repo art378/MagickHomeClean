@@ -16,7 +16,11 @@ namespace WebApplication2.Controllers
         }
 
         // GET: Product
+<<<<<<< HEAD
         public async Task<IActionResult> Index(string? search, int? category, int? subcategory, string? sortOrder)
+=======
+        public async Task<IActionResult> Index(string? search, int? categoryId, int? subcategoryId, string? sortOrder)
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
         {
             var productsQuery = _context.Products
                 .Include(p => p.Category)
@@ -29,6 +33,7 @@ namespace WebApplication2.Controllers
                 productsQuery = productsQuery.Where(p => p.Name.Contains(search));
             }
 
+<<<<<<< HEAD
             if (subcategory.HasValue)
             {
                 productsQuery = productsQuery
@@ -39,6 +44,18 @@ namespace WebApplication2.Controllers
             {
                 productsQuery = productsQuery
                     .Where(p => p.CategoryId == category.Value);
+=======
+            if (subcategoryId.HasValue)
+            {
+                productsQuery = productsQuery
+                    .Where(p => p.ProductSubcategories
+                        .Any(ps => ps.SubcategoryId == subcategoryId.Value));
+            }
+            else if (categoryId.HasValue)
+            {
+                productsQuery = productsQuery
+                    .Where(p => p.CategoryId == categoryId.Value);
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
             }
 
             // Початкове сортування за доступністю (доступні зверху)
@@ -65,11 +82,19 @@ namespace WebApplication2.Controllers
 
             ViewBag.Categories = await _context.Categories.ToListAsync();
 
+<<<<<<< HEAD
             if (category.HasValue)
             {
                 ViewBag.Subcategories = await _context.Subcategories
                     .Where(sub => sub.ProductSubcategories
                         .Any(ps => ps.Product.CategoryId == category.Value))
+=======
+            if (categoryId.HasValue)
+            {
+                ViewBag.Subcategories = await _context.Subcategories
+                    .Where(sub => sub.ProductSubcategories
+                        .Any(ps => ps.Product.CategoryId == categoryId.Value))
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
                     .Distinct()
                     .ToListAsync();
             }
@@ -78,8 +103,13 @@ namespace WebApplication2.Controllers
                 ViewBag.Subcategories = await _context.Subcategories.ToListAsync();
             }
 
+<<<<<<< HEAD
             ViewBag.SelectedCategory = category ?? null;
             ViewBag.SelectedSubcategory = subcategory ?? null;
+=======
+            ViewBag.SelectedCategory = categoryId ?? null;
+            ViewBag.SelectedSubcategory = subcategoryId ?? null;
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
             ViewBag.SearchTerm = search;
             ViewBag.SortOrder = sortOrder;  // передаємо для вибору сортування у View
 
@@ -108,8 +138,12 @@ namespace WebApplication2.Controllers
         {
             ViewBag.AllSubcategories = _context.Subcategories.ToList();
             ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
+<<<<<<< HEAD
             ViewBag.SelectedSubcategoryIds = new List<int>();
             return View(new Product()); 
+=======
+            return View();
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
         }
 
         // POST: Product/Create
@@ -148,7 +182,10 @@ namespace WebApplication2.Controllers
             // Якщо модель невалідна — повертаємо форму з даними
             ViewBag.AllSubcategories = _context.Subcategories.ToList();
             ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
+<<<<<<< HEAD
             ViewBag.SelectedSubcategoryIds = new List<int>();
+=======
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
             return View(product);
         }
 
@@ -243,6 +280,20 @@ namespace WebApplication2.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
+<<<<<<< HEAD
+=======
+        public IActionResult Edit(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Products.Update(product);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(product);
+        }
+        [HttpPost]
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleAvailability(int id)
         {

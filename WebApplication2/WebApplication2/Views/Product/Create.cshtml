@@ -2,7 +2,11 @@
 
 @{
     ViewData["Title"] = "Додати товар";
+<<<<<<< HEAD
     var selectedSubIds = (ViewBag.SelectedSubcategoryIds as IEnumerable<int> ?? new List<int>()).ToList();
+=======
+    var selectedSubIds = ViewBag.SelectedSubcategoryIds as List<int> ?? new List<int>();
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -26,6 +30,7 @@
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
+<<<<<<< HEAD
     <div class="mb-3">
         <label for="SizesWithPrices" class="form-label">
             Розміри і ціни (формат: 140x205=350,155x210=399)
@@ -34,6 +39,8 @@
         <span class="text-muted">Розмір=Ціна, через кому для багатьох варіантів</span>
     </div>
 
+=======
+>>>>>>> 496c6cdd07bf6d142d4075783c173dccfadc866e
 
     <!-- 🔽 Варіант 1: посилання -->
     <div class="mb-3">
