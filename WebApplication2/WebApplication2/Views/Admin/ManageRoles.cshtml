@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Управління ролями";
+    var user = (Microsoft.AspNetCore.Identity.IdentityUser)ViewBag.User;
+    var allRoles = (List<string>)ViewBag.AllRoles;
+    var userRoles = (IList<string>)ViewBag.UserRoles;
+}
+
+<h2>Управління ролями для: @user.Email</h2>
+
+<form method="post" asp-action="AddRole">
+    <input type="hidden" name="userId" value="@user.Id" />
+    <div class="input-group mb-3">
+        <select name="role" class="form-select">
+            @foreach (var role in allRoles.Except(userRoles))
+            {
+                <option value="@role">@role</option>
+            }
+        </select>
+        <button type="submit" class="btn btn-success">Додати</button>
+    </div>
+</form>
+
+@if (userRoles.Any())
+{
+    <h4>Поточні ролі:</h4>
+    <ul class="list-group">
+        @foreach (var role in userRoles)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @role
+                <form method="post" asp-action="RemoveRole" class="d-inline">
+                    <input type="hidden" name="userId" value="@user.Id" />
+                    <input type="hidden" name="role" value="@role" />
+                    <button type="submit" class="btn btn-sm btn-danger">Видалити</button>
+                </form>
+            </li>
+        }
+    </ul>
+}

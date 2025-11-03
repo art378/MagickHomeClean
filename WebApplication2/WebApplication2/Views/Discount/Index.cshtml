@@ -1,0 +1,33 @@
+﻿@model List<Discount>
+
+<h2>Управління знижками</h2>
+<a asp-action="Create" class="btn btn-primary">Додати знижку</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Товар</th>
+            <th>Знижка %</th>
+            <th>Початок</th>
+            <th>Кінець</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>@item.Percent%</td>
+                <td>@item.StartDate.ToString("d")</td>
+                <td>@item.EndDate.ToString("d")</td>
+                <td>
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-danger">Видалити</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

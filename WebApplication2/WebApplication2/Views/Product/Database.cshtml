@@ -1,0 +1,132 @@
+﻿@model IEnumerable<WebApplication2.Models.Product>
+
+@{
+    ViewData["Title"] = "База даних товарів";
+}
+
+<h2 class="mb-4">@ViewData["Title"]</h2>
+
+<div class="mb-3 d-flex gap-2">
+    <a asp-action="Create" class="btn btn-primary">➕ Додати товар</a>
+    <a asp-action="Index" class="btn btn-secondary">⬅️ Назад до списку</a>
+</div>
+
+<table class="table table-hover align-middle text-center">
+    <thead class="table-light">
+        <tr>
+            <th>Назва</th>
+            <th>Опис</th>
+            <th>Ціна</th>
+            <th>Категорія</th>
+            <th>Знижка</th>
+            <th>Дії</th>
+            <th>Наявність</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var activeDiscount = item.Discounts.FirstOrDefault(d =>
+            d.IsActive && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now);
+            decimal discountPercent = activeDiscount?.Percent ?? 0;
+            bool isActive = activeDiscount != null;
+
+            <tr data-product-id="@item.Id">
+                <td>@item.Name</td>
+                <td class="text-truncate" style="max-width: 200px;">@item.Description</td>
+                <td>@item.Price.ToString("0.00") грн</td>
+                <td>@item.Category?.Name</td>
+
+                <td>
+                    @{
+                        var discountString = discountPercent.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    <input type="number" min="0" max="100"
+                           class="form-control form-control-sm discount-percent mb-1 text-center"
+                           value="@discountString" />
+
+                    <div class="form-check d-flex justify-content-center">
+                        <input type="checkbox" class="form-check-input discount-active me-1" @(isActive ? "checked" : "") />
+                        <label class="form-check-label small">Активна</label>
+                    </div>
+                </td>
+
+                <td class="d-flex flex-column gap-1">
+                    <button class="btn btn-sm btn-outline-success save-discount-btn">💾 Зберегти знижку</button>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning">✏️ Редагувати</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">🗑️ Видалити</a>
+                </td>
+
+                <td>
+                    <button class="btn btn-sm toggle-availability @(item.IsAvailable ? "btn-outline-success" : "btn-outline-secondary")"
+                            data-product-id="@item.Id">
+                        @(item.IsAvailable ? "В наявності" : "Немає")
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Активність товару
+            document.querySelectorAll('.toggle-availability').forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-product-id');
+                    const isAvailable = this.textContent.trim() === 'В наявності';
+
+                    fetch(`/Product/ToggleAvailability/${productId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                        }
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                this.textContent = isAvailable ? 'Немає' : 'В наявності';
+                                this.classList.toggle('btn-outline-success');
+                                this.classList.toggle('btn-outline-secondary');
+                            } else {
+                                alert('Сталася помилка при оновленні статусу');
+                            }
+                        })
+                        .catch(() => alert('Сталася помилка при оновленні статусу'));
+                });
+            });
+
+            // Оновлення знижки
+            document.querySelectorAll('.save-discount-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const row = this.closest('tr');
+                    const productId = row.getAttribute('data-product-id');
+                    const percent = parseFloat(row.querySelector('.discount-percent').value) || 0;
+                    const isActive = row.querySelector('.discount-active').checked;
+
+                    fetch('/Product/UpdateDiscount', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                        },
+                        body: JSON.stringify({
+                            productId: parseInt(productId),
+                            percent: percent,
+                            isActive: isActive
+                        })
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('✅ Знижку оновлено');
+                            } else {
+                                alert('❌ Помилка при оновленні');
+                            }
+                        })
+                        .catch(() => alert('❌ Помилка при відправці запиту'));
+                });
+            });
+        });
+    </script>
+}
