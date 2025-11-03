@@ -1,0 +1,89 @@
+html {
+    position: relative;
+    min-height: 100%;
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+/* Анімація появи */
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.cart-link {
+    color: #A9825A; /* Твій фірмовий колір тексту */
+    text-decoration: none; /* Без підкреслення */
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+    .cart-link:hover,
+    .cart-link:focus {
+        color: #7a6c43; /* Темніший відтінок при наведенні */
+        text-decoration: underline; /* Підкреслення при ховері (за бажанням) */
+    }
+
+    .cart-link .badge {
+        background-color: #A9825A !important; /* Заміна яскраво-червоного бейджика на кольори сайту */
+        color: #fff !important;
+    }
+/* Зміна кольору кнопки після додавання */
+.added-to-cart {
+    background-color: #198754 !important; /* Bootstrap success green */
+    border-color: #198754 !important;
+    color: white !important;
+}
+
+/* Прибираємо синю обводку при фокусі */
+#btnAddToCart:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Кнопка hover-ефект */
+a.btn:hover {
+    background-color: #a3714e !important;
+    color: #fff;
+    text-decoration: none;
+}
+
+
+/* Основний контент, що займає простір */
+.main-content {
+    flex: 1;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.card {
+    position: relative;
+    display: block;
+}

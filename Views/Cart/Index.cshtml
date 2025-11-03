@@ -1,0 +1,162 @@
+﻿@model List<WebApplication2.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Ваш кошик";
+    decimal total = Model.Sum(item => item.Price * item.Quantity);
+}
+
+<div class="main-content container mt-4">
+    <h2 class="mb-4">🛒 Ваш кошик</h2>
+
+    @if (!Model.Any())
+    {
+        <p class="text-center fs-4 text-muted mt-5">Ваш кошик порожній.</p>
+    }
+    else
+    {
+        <table class="table table-bordered align-middle text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>Фото</th>
+                    <th>Назва</th>
+                    <th>Розмір</th>
+                    <th>Ціна</th>
+                    <th>Кількість</th>
+                    <th>Сума</th>
+                    <th>Дія</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+{
+    bool hasDiscount = item.HasDiscount;
+    decimal discountPercent = item.DiscountPercent ?? 0;
+    decimal finalPrice = item.Price; // item.Price уже враховує знижку
+
+    <tr data-product-id="@item.ProductId">
+        <td><img src="@item.ImageUrl" style="width: 80px; height: auto;" /></td>
+        <td>@item.ProductName</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Size))
+                            {
+                                @item.Size
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </td>
+
+        <td>
+    @if (item.HasDiscount)
+    {
+        <div>
+            <span class="badge bg-warm-danger">-@item.DiscountPercent?.ToString("0")%</span><br />
+            <span class="price-old">@item.OriginalPrice.ToString("0.00") грн</span><br />
+            <span class="text-warm-success fw-bold">@item.Price.ToString("0.00") грн</span>
+        </div>
+    }
+    else
+    {
+        <span class="text-warm-gold fw-bold">@item.Price.ToString("0.00") грн</span>
+    }
+</td>
+
+        <td>
+            <div class="d-flex justify-content-center align-items-center">
+                <button class="btn btn-sm btn-outline-secondary quantity-btn" data-change="-1">−</button>
+                <span class="mx-2 quantity">@item.Quantity</span>
+                <button class="btn btn-sm btn-outline-secondary quantity-btn" data-change="1">+</button>
+            </div>
+        </td>
+        <td><span class="item-total">@((finalPrice * item.Quantity).ToString("0.00"))</span> грн</td>
+        <td>
+            <form asp-action="Remove" asp-route-id="@item.ProductId" method="post">
+    @Html.AntiForgeryToken()
+    <button class="btn btn-sm btn-outline-danger">Видалити</button>
+</form>
+
+        </td>
+    </tr>
+}
+
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <h4>Загальна сума: <span id="total-sum">@total.ToString("0.00")</span> грн</h4>
+        </div>
+        <div class="mt-4">
+            <a asp-action="Clear" class="btn btn-danger">Очистити кошик</a>
+            <a asp-controller="Order" asp-action="Checkout" class="btn btn-success">Оформити замовлення</a>
+        </div>
+    }
+</div>
+<style>
+    .bg-warm-danger {
+        background-color: #C75B39; /* теплий темно-помаранчево-коричневий */
+        color: #fff;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+    }
+
+    .price-old {
+        color: rgba(169, 130, 90, 0.5); /* світліший теплий коричневий */
+        text-decoration: line-through;
+        text-decoration-thickness: 1.3px;
+        margin-right: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .text-warm-success {
+        color: #A9825A; /* золотистий */
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .text-warm-gold {
+        color: #A9825A;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll(".quantity-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const change = parseInt(this.dataset.change);
+                const row = this.closest("tr");
+                const productId = row.dataset.productId;
+                const quantitySpan = row.querySelector(".quantity");
+
+                let currentQuantity = parseInt(quantitySpan.textContent);
+                let newQuantity = currentQuantity + change;
+                if (newQuantity < 1) return;
+
+                quantitySpan.textContent = newQuantity;
+
+                const pricePerUnit = parseFloat(row.querySelector(".item-total").textContent) / currentQuantity;
+                const newTotal = (pricePerUnit * newQuantity).toFixed(2);
+                row.querySelector(".item-total").textContent = newTotal;
+
+                updateTotal();
+
+                fetch(`/Cart/UpdateQuantity?productId=${productId}&quantity=${newQuantity}`, {
+                    method: 'POST'
+                });
+            });
+        });
+
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll(".item-total").forEach(span => {
+                total += parseFloat(span.textContent);
+            });
+            document.getElementById("total-sum").textContent = total.toFixed(2);
+        }
+    </script>
+}

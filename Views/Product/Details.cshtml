@@ -1,0 +1,222 @@
+﻿@model WebApplication2.Models.Product
+
+<div class="container my-5">
+    <div class="row g-4">
+        <div class="col-md-6 text-center">
+            <div class="img-container mx-auto rounded shadow-sm">
+                <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid" />
+            </div>
+        </div>
+
+        <div class="col-md-6 d-flex flex-column" style="font-family: 'Poppins', sans-serif;">
+            <h1 class="fw-bold mb-3 text-dark" style="font-size: 2.2rem;">@Model.Name</h1>
+
+            <div class="mb-3 text-secondary">
+                <div><strong>Категорія:</strong> @Model.Category?.Name</div>
+                <div>
+                    <strong>Підкатегорії:</strong>
+                    @if (Model.ProductSubcategories != null && Model.ProductSubcategories.Any())
+                    {
+                        @string.Join(", ", Model.ProductSubcategories.Select(ps => ps.Subcategory.Name))
+                    }
+                    else
+                    {
+                        <span>Немає підкатегорій</span>
+                    }
+                </div>
+            </div>
+
+
+            <div class="mb-3">
+                @{
+                    var activeDiscount = Model.Discounts.FirstOrDefault(d => d.IsActive && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now);
+                    var hasDiscount = activeDiscount != null;
+                    decimal discountPercent = activeDiscount?.Percent ?? 0;
+                    decimal finalPrice = hasDiscount ? Model.Price * (1 - discountPercent / 100) : Model.Price;
+                }
+
+                @if (hasDiscount)
+                {
+                    <div class="mb-2">
+                        <span class="badge bg-warm-danger mb-1">-@discountPercent.ToString("0")%</span><br />
+                        <span class="price-old">@Model.Price.ToString("0.00") грн</span>
+                        <strong class="fs-3 text-warm-success">@finalPrice.ToString("0.00") грн</strong>
+                    </div>
+                }
+                else
+                {
+                    <h2 id="product-price" class="fw-semibold text-warm-gold" style="font-size: 2.2rem;">
+                        @Model.Price.ToString("0.00") <small class="fs-5">₴</small>
+                    </h2>
+                }
+
+                @if (Model.IsAvailable)
+                {
+                    <span class="badge fs-6" style="background-color: #A9825A; color: white;">В наявності</span>
+                }
+                else
+                {
+                    <span class="fs-6 badge" style="background-color: #B0B0B0; color: #fff;">Немає в наявності</span>
+                }
+            </div>
+
+            <div class="mb-4 text-dark" style="white-space: pre-line;">
+                @Model.Description
+            </div>
+            @{
+                var sizePricePairs = Model.SizesWithPrices?
+                .Split(',')
+                .Select(x => x.Split('='))
+                .Where(parts => parts.Length == 2)
+                .Select(parts => new { Size = parts[0], Price = decimal.Parse(parts[1]) })
+                .ToList();
+            }
+            @if (sizePricePairs != null && sizePricePairs.Any())
+            {
+                <div class="mb-3">
+                    <label class="form-label">Оберіть розмір і ціну:</label>
+                    <div id="sizes-group" class="d-flex flex-wrap gap-2">
+                        @foreach (var sp in sizePricePairs)
+                        {
+                            <label class="btn btn-outline-secondary">
+                                <input type="radio" name="SelectedSize" value="@sp.Size" data-price="@sp.Price" autocomplete="off" />
+                                @sp.Size (@sp.Price грн)
+                            </label>
+                        }
+                    </div>
+                </div>
+            }
+
+
+            <form asp-controller="Cart" asp-action="AddToCart" method="post" class="w-100 align-self-start mt-3" id="addToCartForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="hidden" name="SelectedSize" id="selectedSizeHidden" />
+                <input type="hidden" name="SelectedPrice" id="selectedPriceHidden" />  
+                <button id="btnAddToCart" type="submit" class="btn btn-warning btn-lg w-100 shadow-sm"
+                        style="font-family: 'Poppins', sans-serif;'"
+                        @(Model.IsAvailable ? "" : "disabled=\"disabled\"")>
+                    <i class="bi bi-cart-plus me-2"></i> Додати до кошика
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .img-container {
+        width: 100%;
+        max-width: 400px;
+        height: 400px;
+        overflow: hidden;
+        background-color: #f8f8f8;
+    }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+    /* Теплий червоний для бейджу знижки */
+    .bg-warm-danger {
+        background-color: #C75B39; /* теплий темно-помаранчево-коричневий */
+        color: #fff;
+    }
+
+    /* Теплий зелений для нової ціни */
+    .text-warm-success {
+        color: #A9825A; /* золотистий */
+    }
+
+    /* Затишний золотистий колір для звичайної ціни */
+    .text-warm-gold {
+        color: #A9825A;
+    }
+
+    /* Перекреслена стара ціна */
+    .price-old {
+        color: rgba(169, 130, 90, 0.5); /* світліший теплий коричневий */
+        text-decoration: line-through;
+        text-decoration-thickness: 1.3px;
+        margin-right: 0.5rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('addToCartForm');
+            const btn = document.getElementById('btnAddToCart');
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                if (btn.disabled) return;
+
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': form.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            btn.classList.remove('btn-warning');
+                            btn.classList.add('added-to-cart');
+                            btn.disabled = true;
+                            btn.innerHTML = `
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="3" style="vertical-align: middle; margin-right: 6px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                Додано
+                            `;
+
+                            const cartCountEl = document.getElementById('cart-count');
+                            if (cartCountEl) {
+                                cartCountEl.textContent = data.totalItems;
+                                cartCountEl.style.display = data.totalItems > 0 ? 'inline-block' : 'none';
+                            }
+                        }
+                    });
+            });
+                // --- Додаємо поведінку для вибору розміру ---
+                const sizeRadios = document.querySelectorAll('input[name="SelectedSize"]');
+        const selectedSizeHidden = document.getElementById('selectedSizeHidden');
+        const selectedPriceHidden = document.getElementById('selectedPriceHidden');
+
+        sizeRadios.forEach(radio => {
+            radio.addEventListener('change', function () {
+                selectedSizeHidden.value = this.value;
+                selectedPriceHidden.value = this.getAttribute('data-price');
+            });
+        });
+
+        document.getElementById('addToCartForm').addEventListener('submit', function (e) {
+            if (sizeRadios.length > 0 && (!selectedSizeHidden.value || !selectedPriceHidden.value)) {
+                e.preventDefault();
+                alert('Оберіть розмір і ціну!');
+            }
+                   
+
+        });
+                const priceDisplay = document.getElementById('product-price');
+
+        sizeRadios.forEach(radio => {
+            radio.addEventListener('change', function () {
+                const newPrice = this.getAttribute('data-price');
+                if (priceDisplay && newPrice) {
+                    priceDisplay.innerHTML = parseFloat(newPrice).toFixed(2) + ' <small class="fs-5">₴</small>';
+                }
+            });
+        });
+        });
+    </script>
+}
