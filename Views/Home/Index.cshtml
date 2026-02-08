@@ -1,77 +1,158 @@
-﻿@{
-    ViewData["Title"] = "Головна";
+@{
+    ViewData["Title"] = "Magic Home: текстиль, посуд, декор, подарунки, натхнення;)";
+    ViewData["Description"] = "Великий вибір якісного, натурального текстилю для дому, вишуканого посуду, оригінального затишного декору та стильних подарунків, що дарують емоції. Купити тут.";
 }
 
 <div class="container mt-4">
 
     <!-- HERO БЛОК -->
     <div class="container py-5">
-        <div class="row align-items-center fade-in">
-            <!-- Фото магазину -->
+        <div class="row align-items-center">
             <div class="col-md-6 mb-4 mb-md-0 text-center">
-                <img src="~/images/store.jpg"
-                     class="img-fluid rounded-4 shadow"
-                     alt="Магазин Magic Home"
-                     style="max-width: 100%; max-height: 400px; object-fit: cover;">
+                <img src="~/images/logo.png"
+                     class="img-fluid"
+                     alt="Логотип Magic Home"
+                     style="max-height: 520px; width: auto; object-fit: contain;">
             </div>
 
-            <!-- Текстовий блок -->
-            <div class="col-md-6">
-                <h1 class="display-4 fw-bold mb-3" style="color: #a3714e; font-family: 'Poppins', sans-serif;">Magic Home</h1>
-                <p class="lead mb-4" style="color: #5e4b41; font-size: 1.25rem;">
-                    З нами Ваш дім буде затишний та комфортний
+            <div class="col-md-6 text-center text-md-start ps-md-5" style="margin-top: -2rem;">
+                <h1 class="display-4 fw-bold mb-3" style="color: #a3714e; font-family: 'Poppins', sans-serif;">
+                    Magic Home
+                </h1>
+                <p class="mb-4" style="color: #5e4b41; font-size: 1.05rem; line-height: 1.6; max-width: 95%;">
+                    Великий вибір якісного, натурального текстилю для дому, вишуканого посуду, оригінального затишного декору та стильних подарунків, що дарують емоції. Купити тут.
                 </p>
                 <a href="@Url.Action("Index", "Product")"
-                   class="btn btn-lg px-4 py-2 rounded-pill text-white shadow"
-                   style="background-color: #c89163; transition: background-color 0.3s ease;">
+                   class="btn btn-lg px-4 py-2 rounded-pill text-white shadow magichome-btn">
                     Переглянути каталог
                 </a>
             </div>
         </div>
     </div>
 
-
-
-
-
     <!-- КАТЕГОРІЇ -->
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Категорії товарів</h2>
+        <h2 class="text-center mb-4" style="color: #5e4b41;">Категорії товарів</h2>
         <div class="row row-cols-1 row-cols-md-3 g-4">
 
+            <!-- Текстиль -->
             <div class="col">
-                <div class="card h-100 border-0 shadow rounded-4 text-center">
+                <div class="card h-100 border-0 shadow rounded-4 text-center category-card">
                     <div class="card-body">
-                        <i class="bi bi-house fs-1 text-primary"></i>
-                        <h5 class="card-title mt-3">Текстиль</h5>
-                        <p class="card-text">Комплекти, рушники, скатертини та інше для затишку.</p>
-                        <a asp-controller="Product" asp-action="Index" asp-route-categoryId="1" class="btn btn-outline-primary btn-sm mt-2 rounded-pill px-4">Переглянути</a>
+                        <div class="mb-3 category-icon-wrapper">
+                            <img src="~/images/tekstyl.png"
+                                 alt="Текстиль"
+                                 class="category-icon">
+                        </div>
+                        <h5 class="card-title mt-3" style="color: #5e4b41; font-weight: 600;">Текстиль</h5>
+                        <p class="card-text" style="color: #7a6b5f;">Комплекти, рушники, скатертини та інше для затишку.</p>
+                        <a asp-controller="Product" asp-action="Index" asp-route-category="1"
+                           class="btn btn-sm mt-2 rounded-pill px-4 text-white magichome-btn-secondary">
+                            Переглянути
+                        </a>
                     </div>
                 </div>
             </div>
 
+            <!-- Посуд -->
             <div class="col">
-                <div class="card h-100 border-0 shadow rounded-4 text-center">
+                <div class="card h-100 border-0 shadow rounded-4 text-center category-card">
                     <div class="card-body">
-                        <i class="bi bi-cup-hot fs-1 text-success"></i>
-                        <h5 class="card-title mt-3">Посуд</h5>
-                        <p class="card-text">Скляний, глиняний, посуд для сервірування — все для вашої кухні.</p>
-                        <a asp-controller="Product" asp-action="Index" asp-route-categoryId="2" class="btn btn-outline-success btn-sm mt-2 rounded-pill px-4">Переглянути</a>
+                        <div class="mb-3 category-icon-wrapper">
+                            <img src="~/images/cup.png"
+                                 alt="Посуд"
+                                 class="category-icon">
+                        </div>
+                        <h5 class="card-title mt-3" style="color: #5e4b41; font-weight: 600;">Посуд</h5>
+                        <p class="card-text" style="color: #7a6b5f;">Скляний, глиняний, посуд для сервірування — все для вашої кухні.</p>
+                        <a asp-controller="Product" asp-action="Index" asp-route-category="2"
+                           class="btn btn-sm mt-2 rounded-pill px-4 text-white magichome-btn-secondary">
+                            Переглянути
+                        </a>
                     </div>
                 </div>
             </div>
-
+<!-- Декор -->
             <div class="col">
-                <div class="card h-100 border-0 shadow rounded-4 text-center">
+                <div class="card h-100 border-0 shadow rounded-4 text-center category-card">
                     <div class="card-body">
-                        <i class="bi bi-stars fs-1 text-danger"></i>
-                        <h5 class="card-title mt-3">Декор</h5>
-                        <p class="card-text">Аксесуари, статуетки, фоторамки, вази для затишного інтер'єру.</p>
-                        <a asp-controller="Product" asp-action="Index" asp-route-categoryId="3" class="btn btn-outline-danger btn-sm mt-2 rounded-pill px-4">Переглянути</a>
+                        <div class="mb-3 category-icon-wrapper">
+                            <img src="~/images/dekor.png"
+                                 alt="Декор"
+                                 class="category-icon">
+                        </div>
+                        <h5 class="card-title mt-3" style="color: #5e4b41; font-weight: 600;">Декор</h5>
+                        <p class="card-text" style="color: #7a6b5f;">Аксесуари, статуетки, фоторамки, вази для затишного інтер'єру.</p>
+                        <a asp-controller="Product" asp-action="Index" asp-route-category="3"
+                           class="btn btn-sm mt-2 rounded-pill px-4 text-white magichome-btn-secondary">
+                            Переглянути
+                        </a>
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
+
 </div>
+
+<style>
+    .magichome-btn {
+        background-color: #c89163;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+        .magichome-btn:hover {
+            background-color: #a3714e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(161, 113, 78, 0.3) !important;
+        }
+
+    .magichome-btn-secondary {
+        background-color: #c89163;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+        .magichome-btn-secondary:hover {
+            background-color: #a3714e;
+        }
+
+    .social-btn {
+        transition: transform 0.3s ease;
+    }
+
+        .social-btn:hover {
+            transform: scale(1.1);
+        }
+
+    .category-card {
+        background-color: #fdf8f4;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+
+    /* ЗБІЛЬШЕНІ ЗОБРАЖЕННЯ КАТЕГОРІЙ */
+    .category-icon-wrapper {
+        height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .category-icon {
+        height: 120px;
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    .category-card:hover .category-icon {
+        transform: scale(1.05);
+    }
+</style>
